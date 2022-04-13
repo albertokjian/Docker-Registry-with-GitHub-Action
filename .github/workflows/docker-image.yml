@@ -57,6 +57,7 @@ jobs:
         # Version of helm
         version: 3.3.1
 
+    - run: echo "HELM_EXPERIMENTAL_OCI=1" >> $GITHUB_ENV
     - name: Login to ACR using HELM
       run: |
         echo $ | helm registry login bcglabacr01.azurecr.io --username bcglabacr01 --password vQign8/X5HO3XhfXFWFW05CtHqpYV+dM
