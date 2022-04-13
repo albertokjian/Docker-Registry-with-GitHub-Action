@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: albert01
-        image: albertok/spring-demo:latst
+        image: albertok/spring-demo:latest
         resources:
           limits:
             memory: "128Mi"
