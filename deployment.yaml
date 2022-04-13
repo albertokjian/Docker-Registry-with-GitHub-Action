@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: albert01
+spec:
+  selector:
+    matchLabels:
+      app: albert01
+  template:
+    metadata:
+      labels:
+        app: albert01
+    spec:
+      containers:
+      - name: albert01
+        image: albertok/spring-demo:latst
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
