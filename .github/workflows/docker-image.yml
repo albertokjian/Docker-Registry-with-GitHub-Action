@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  HELM_EXPERIMENTAL_OCI: 1
+
 jobs:
 
   build_push_image:
@@ -57,7 +60,7 @@ jobs:
         # Version of helm
         version: 3.3.1
 
-    - run: echo "HELM_EXPERIMENTAL_OCI=1" >> $GITHUB_ENV
+    # - run: echo "HELM_EXPERIMENTAL_OCI=1" >> $GITHUB_ENV
     - name: Login to ACR using HELM
       run: |
         echo $ | helm registry login bcglabacr01.azurecr.io --username bcglabacr01 --password vQign8/X5HO3XhfXFWFW05CtHqpYV+dM
@@ -73,19 +76,37 @@ jobs:
       run: helm chart push bcglabacr01.azurecr.io/charts-albert01-api:latest
 
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build_push_image # Will wait for the execution of the previous job 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_push_image # Will wait for the execution of the previous job 
 
-  #   steps:
-  #   - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
-  #   - name: Kubernetes set context
-  #     uses: Azure/k8s-set-context@v1
-  #     with:
-  #       kubeconfig: ${{secrets.KUBECONFIG}} # Grab the auth token from GitHub secrets
-  #     id: login
+    - name: Kubernetes set context
+      uses: Azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{secrets.KUBECONFIG}} # Grab the auth token from GitHub secrets
+      id: login
 
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v1
+      with:
+        # Version of helm
+        version: 3.3.1
+
+    - name: Login to ACR using HELM
+      run: |
+        echo $ | helm registry login bcglabacr01.azurecr.io --username bcglabacr01 --password vQign8/X5HO3XhfXFWFW05CtHqpYV+dM
+
+    - name: Helm Chart Pull
+      run: helm chart pull bcglabacr01.azurecr.io/charts-albert01-api:latest
+
+    - name: Helm Chart Move
+      run: helm chart export bcglabacr01.azurecr.io/charts-albert01-api:latest --destination ./install
+
+    - name: Helm Chart Install
+      run: helm upgrade --namespace ns-qa --install --set image.tag=latest albert01-api ./install/albert01-api # release name chart name
   #   #Declarative Deployment-02
   #   - name: Kubernetes Deployment
   #     run: kubectl apply -f deployment.yaml
