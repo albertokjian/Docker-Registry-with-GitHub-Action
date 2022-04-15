@@ -105,7 +105,7 @@ jobs:
   #     run: helm chart export bcglabacr01.azurecr.io/charts-albert01-api:latest --destination ./install
 
   #   - name: Helm Chart Install
-  #     run: helm upgrade --namespace ns-qa --install --set image.tag=latest albert01-api ./install/albert01-api # release name chart name
+  #     run: helm upgrade --namespace ns-albert --create-namespace --install --set image.tag=latest albert01-api ./install/albert01-api # release name chart name
   #   #Declarative Deployment-02
   #   - name: Kubernetes Deployment
   #     run: kubectl apply -f deployment.yaml
