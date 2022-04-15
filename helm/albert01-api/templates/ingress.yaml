@@ -19,4 +19,4 @@ spec:
                   name: {{ .Values.app.name }}
                   port:
                     number: {{ .Values.service.port }}
-              path: /WeatherForecastAction
+              path: /SpringDemo/
