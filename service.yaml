@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: albert01-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: albert01
   ports:

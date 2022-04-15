@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: albert01-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Accept-Encoding "";
+      sub_filter '<head>' '<head> <base href="/SpringApp/">';
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: '*'
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: access-token,Authorization,Content-Type,Postman-Token,cache-control
+spec:
+  rules:
+    - http:
+        paths:
+            - pathType: Prefix
+              backend:
+                service:
+                  name: albert01-svc
+                  port:
+                    number: 8080
+              path: /SpringApp/
